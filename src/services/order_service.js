@@ -51,25 +51,41 @@ class OrderService {
         
             createOrder(data){
                 const sql2 = 'select sum(rate * ((DATEDIFF((orders.created_at), (order_products.created_at)) + 1))) as data from order_products join disks on order_products.disk_id = disks.id join orders on order_products.user_id = orders.user_id where orders.user_id = ?'
-                const sql = 'INSERT INTO ORDERS (user_id, total_price) VALUES (?, ?)'
+                const sql = 'INSERT INTO ORDERS (user_id) VALUES (?, ?)'
+                const sql3 = 'UPDATE ORDERS SET total_price = ? where user_id = ?'
                
                
                
                 return new Promise((resolve, reject) => {
-                this.dbConn.query(sql2, [data.user_id], (err, results2 ) => {
-                    console.log(results2)
-                    this.dbConn.query(sql, [data.user_id, results2[0].data], (err, results) => {
+        //         this.dbConn.query(sql2, [data.user_id], (err, results2 ) => {
+        //             console.log(results2)
+                    this.dbConn.query(sql, [data.user_id], (err, results) => {
                         if (err) {
                             reject(err)
                         }
-                        const res = {
-                            id: results.insertId,
-                            ...data,
-                        }
-                        resolve(res)
+
+                        this.dbConn.query(sql2, [data.user_id], (err, results2 ) => {
+                                this.dbConn.query(sql3, [results2[0].data, data.user_id], (err, results3) => {
+
+                                     const res = {
+                                         id: results.insertId,
+                                         user_id: data.user_id,
+                                         total_price: results2[0].data
+                                    }
+                                    
+                                    resolve(res)
+
+                                })
+
+                           
+                        
+                        })
+
+                       
                     })
         
-                })
+        //         })
+
                    
                 })
             }
