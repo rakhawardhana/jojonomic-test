@@ -55,6 +55,7 @@ class OrderService {
                 const sql2 = `select sum(rate * ((DATEDIFF((orders.created_at), (order_products.created_at)) + 1))) as data from order_products join disks on order_products.disk_id = disks.id join orders on order_products.user_id = orders.user_id where orders.id = ? `
                 const sql = `INSERT INTO ORDERS SET user_id = ?`
                 const sql3 = `UPDATE ORDERS SET total_price = ? where user_id = ?`
+                const sql4 = `UPDATE DISKS SET stock = (SELECT quantity FROM order_products ORDER BY disk_id LIMIT 1) WHERE stock IS NOT NULL`
                 
                
                
@@ -71,12 +72,17 @@ class OrderService {
                             console.log(results2)
                                 this.dbConn.query(sql3, [results2[0].data, data.user_id], (err, results3) => {
 
+                                    this.dbConn.query(sql4, (err, results4) => {
+                                        console.log(results4)
+                                    })
+
                                      const res = {
                                          id: results.insertId,
                                          user_id: data.user_id,
                                          total_price: results2[0].data
                                     }
                                     
+
                                     resolve(res)
 
                                 })
