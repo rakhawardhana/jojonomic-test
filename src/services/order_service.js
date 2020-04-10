@@ -9,9 +9,9 @@ class OrderService {
     }
 
     create(data) {
-        const sql = 'SELECT * FROM DISKS WHERE id = ?'
+        const sql = 'select * from disks where id = ?'
         const sql2 = 'INSERT INTO ORDER_PRODUCTS (user_id, disk_id, quantity) VALUES (?, ?, ?)'
-        const sql3 = 'UPDATE DISKS SET stock = ? WHERE id = ?'
+        const sql3 = `UPDATE DISKS SET stock = ? WHERE id = ?;`
             return new Promise((resolve, reject) => {
                     this.dbConn.query(sql, [data.disk_id], (err, results) => {
                         if(err) {
@@ -26,13 +26,11 @@ class OrderService {
                                 disk_id: data.disk_id, 
                                 quantity: data.quantity
                             }
-        
+
+                            console.log(res)
                             
-                            this.dbConn.query(sql3, [ results[0].stock - data.quantity, data.disk_id,], (err, results3) => {
-                               if(err) {
-                                   reject(err)
-                               }
-        
+                            this.dbConn.query(sql3, [(results[0].stock - data.quantity), data.disk_id], (err, results3) => {
+                                
                                resolve(res)
         
                             })
