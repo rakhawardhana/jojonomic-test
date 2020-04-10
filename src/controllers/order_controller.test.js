@@ -14,7 +14,7 @@ beforeEach(() => {
 
 test("should return status code 201 and order data", () => {
     orderService.create.mockImplementation(data => {
-        return new Promise((resolve, _) => resolve({id: 1, ...data}))
+        return new Promise((resolve, _) => resolve({ ...data}))
     })
     const req = {
         body: {
@@ -33,4 +33,26 @@ test("should return status code 201 and order data", () => {
         return res
     }
     orderController.create(req, res)
+})
+
+
+test("should return status code 201 and order data", () => {
+    orderService.createOrder.mockImplementation(data => {
+        return new Promise((resolve, _) => resolve({id: 1, ...data}))
+    })
+    const req = {
+        body: {
+            "user_id": 2
+        }
+    }
+    const res = {}
+    res.json = resp => {
+        expect(resp).toEqual({ id: 1, ...req.body })
+        return res
+    }
+    res.status = code => {
+        expect(code).toEqual(201)
+        return res
+    }
+    orderController.createOrder(req, res)
 })
