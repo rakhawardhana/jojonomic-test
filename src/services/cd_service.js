@@ -8,6 +8,8 @@ class CdService {
         this.updateStock = this.updateStock.bind(this)
     }
 
+
+    // Insert cd collection
     create(data) {
         const sql = `INSERT INTO DISKS (title, category, rate, stock) VALUES (?, ?, ?, ?)`
         return new Promise((resolve, reject) => {
@@ -24,6 +26,7 @@ class CdService {
         })
     }
 
+    // update cd stock
     updateStock(id, stock) {
         const sql = `UPDATE DISKS SET stock = ? WHERE id = ?`
         return new Promise((resolve, reject) => {

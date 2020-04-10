@@ -7,6 +7,7 @@ class UserService {
         this.create = this.create.bind(this)
     }
 
+    // Add customer
     create(data) {
         const sql = `INSERT INTO CUSTOMERS (name) VALUES (?)`
         return new Promise((resolve, reject) => {
