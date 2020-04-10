@@ -3,15 +3,16 @@ class OrderService {
 
     constructor(db){
         this.dbConn = db
-      
+        this.create = this.create.bind(this)
+        this.createOrder = this.createOrder.bind(this)
         
     }
 
     create(data) {
-                const sql = 'SELECT * FROM DISKS WHERE id = ?'
-                const sql2 = 'INSERT INTO ORDER_PRODUCTS (user_id, disk_id, quantity) VALUES (?, ?, ?)'
-                const sql3 = 'UPDATE DISKS SET stock = ? WHERE id = ?'
-                return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM DISKS WHERE id = ?'
+        const sql2 = 'INSERT INTO ORDER_PRODUCTS (user_id, disk_id, quantity) VALUES (?, ?, ?)'
+        const sql3 = 'UPDATE DISKS SET stock = ? WHERE id = ?'
+            return new Promise((resolve, reject) => {
                     this.dbConn.query(sql, [data.disk_id], (err, results) => {
                         if(err) {
                             reject(err)
@@ -47,7 +48,7 @@ class OrderService {
                         }
                     })
                 })
-            }
+    }
         
             createOrder(data){
                 const sql2 = 'select sum(rate * ((DATEDIFF((orders.created_at), (order_products.created_at)) + 1))) as data from order_products join disks on order_products.disk_id = disks.id join orders on order_products.user_id = orders.user_id where order_products.user_id = ?'
