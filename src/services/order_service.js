@@ -18,7 +18,6 @@ class OrderService {
                             reject(err)
                         }
         
-                        // check if order.quantity is not > stock
                         if(results[0].stock >= data.quantity) {
         
                         this.dbConn.query(sql2, [data.user_id, data.disk_id, data.quantity], (err, results2) => {
@@ -51,14 +50,14 @@ class OrderService {
     }
         
             createOrder(data){
-                const sql2 = 'select sum(rate * ((DATEDIFF((orders.created_at), (order_products.created_at)) + 1))) as data from order_products join disks on order_products.disk_id = disks.id join orders on order_products.user_id = orders.user_id where order_products.user_id = ?'
+                const sql2 = 'select sum(rate * ((DATEDIFF((orders.created_at), (order_products.created_at)) + 1))) as data from order_products join disks on order_products.disk_id = disks.id join orders on order_products.user_id = orders.user_id where orders.user_id = ?'
                 const sql = 'INSERT INTO ORDERS (user_id, total_price) VALUES (?, ?)'
                
                
                
                 return new Promise((resolve, reject) => {
                 this.dbConn.query(sql2, [data.user_id], (err, results2 ) => {
-                    console.log(results2[0].data)
+                    console.log(results2)
                     this.dbConn.query(sql, [data.user_id, results2[0].data], (err, results) => {
                         if (err) {
                             reject(err)

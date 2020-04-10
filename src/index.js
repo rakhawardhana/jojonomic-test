@@ -26,22 +26,7 @@ class App {
             CREATE TABLE IF NOT EXISTS ORDER_PRODUCTS (user_id int NOT NULL, disk_id int NOT NULL, quantity int NOT NULL, created_at timestamp NULL default current_timestamp, updated_at timestamp null default current_timestamp on update current_timestamp, FOREIGN KEY (user_id) REFERENCES CUSTOMERS(id) ON UPDATE CASCADE ON DELETE CASCADE, FOREIGN KEY (disk_id) REFERENCES DISKS(id) ON UPDATE CASCADE ON DELETE CASCADE);
         `)
         conn.query(`CREATE TABLE IF NOT EXISTS ORDERS (id int NOT NULL AUTO_INCREMENT, user_id int NOT NULL, total_price int DEFAULT 0,  created_at timestamp NULL default current_timestamp, updated_at timestamp null default current_timestamp on update current_timestamp,PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES CUSTOMERS(id) ON UPDATE CASCADE ON DELETE CASCADE)`)
-        // conn.query(`
-        //     CREATE TABLE USERS (
-        //         id int NOT NULL AUTO INCREMENT,
-        //         name varchar(255),
-        //         PRIMARY KEY (id)
-        //     );
-        // `)
-        // conn.query(`
-            // CREATE TABLE ORDERS (
-            //     id int NOT NULL AUTO INCREMENT,
-            //     user_id int NOT NULL,
-            //     disk_id int NOT NULL,
-            //     PRIMARY KEY (id),
-            //     FOREIGN KEY (user_id) REFERENCES USERS(id) ON UPDATE CASCADE ON DELETE CASCADE,
-            //     FOREIGN KEY (disk_id) REFERENCES DISKS(id) ON UPDATE CASCADE ON DELETE CASCADE
-        //     );`)
+       
     }
 
     registerRouters() {
